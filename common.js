@@ -63,25 +63,7 @@ function refreshWarnings(pageId, parentDiv) {
             if(res.lastSyncedRevId == mw.config.values.wgRevisionId ){
                 $(parentDiv).append("<div class=\"synced-bubble\">App ist auf dem aktuellen Stand</div>")
             } else {
-                var refreshButton = document.createElement("button");
-                refreshButton.setAttribute('class', 'btn');
-                refreshButton.innerHTML = "<strong>Wiki Artikel zur App übertragen</strong"
-                refreshButton.onclick = function(e) {
-                    this.disabled = true;
-                    this.innerHTML = "Warte auf Server..."
-                    const articlePushUrl = apiBaseUrl + "/" + apiKey + "/" + pageId;
-                    $.post(articlePushUrl)
-                    .done(function(res) {
-                        setTimeout(function() {
-                            resyncPage(pageId, parentDiv)
-                         }, 250);
-                    })
-                    .fail(function(err) {
-                        this.innerHTML = "Ein Fehler ist aufgetreten: " + err.message 
-                        console.log(err)
-                    });
-                };
-                parentDiv.append(refreshButton);
+                makeRefreshButton(pageId, parentDiv);
             }
 
             const warnings = res.warnings.split('|');
@@ -94,9 +76,32 @@ function refreshWarnings(pageId, parentDiv) {
         })
         .fail(function(err) {
             this.innerHTML = "Ein Fehler ist aufgetreten: " + err.message;
+            makeRefreshButton(pageId, parentDiv);
             console.log(err)
         });
 }
+
+function makeRefreshButton(pageId, parentDiv) {
+    var refreshButton = document.createElement("button");
+    refreshButton.setAttribute('class', 'btn');
+    refreshButton.innerHTML = "<strong>Wiki Artikel zur App übertragen</strong"
+    refreshButton.onclick = function(e) {
+        this.disabled = true;
+        this.innerHTML = "Warte auf Server..."
+        const articlePushUrl = apiBaseUrl + "/" + apiKey + "/" + pageId;
+        $.post(articlePushUrl)
+        .done(function(res) {
+            setTimeout(function() {
+                resyncPage(pageId, parentDiv)
+             }, 250);
+        })
+        .fail(function(err) {
+            this.innerHTML = "Ein Fehler ist aufgetreten: " + err.message 
+            console.log(err)
+        });
+    };
+    parentDiv.append(refreshButton);
+} 
 
 function toWarningBubble(warning) {
     switch(warning) {
