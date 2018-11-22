@@ -67,6 +67,7 @@ function refreshWarnings(pageId, parentDiv) {
             }
 
             const warnings = res.warnings.split('|');
+            if (warnings[0] === "") return; 
             warnings.forEach(function(element) {
                 console.log(element); 
                 parentDiv.append(toWarningBubble(element));
