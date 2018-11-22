@@ -1,0 +1,10 @@
+/* Das folgende CSS wird für alle Benutzeroberflächen geladen. */
+.warning-bubble {
+    background: yellow;
+    font-weight:bold;
+}
+
+.synced-bubble {
+    background: green;
+    font-weight:bold;
+}
